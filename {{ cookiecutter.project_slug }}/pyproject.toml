@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.1.0"
+description = "{{ cookiecutter.project_description }}"
+authors = ["{{ cookiecutter.project_author_name }}"]
+
+[tool.poetry.dev-dependencies]
+jupyter = "*"
+jupyterlab = "*"
+flake8 = "*"
+black = "*"
+jupyterlab_vim = "*"
+
+[tool.poetry.dependencies]
+python = "^{{ cookiecutter.python_version }}"
+
+{% if cookiecutter.project_packages == "All" -%}
+fs = "*"
+pathlib = "*"
+pyprojroot = "*"
+pyhere = "*"
+pandas = "*"
+python-dotenv = "*"
+pyodbc = "*"
+mysql-connector-python = "*"
+boto3 = "*"
+{% endif -%}
+
+{% if cookiecutter.project_packages == "Minimal"-%}
+{% endif -%}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = ["poetry.core.masonry.api"]

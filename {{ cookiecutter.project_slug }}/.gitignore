@@ -1,0 +1,41 @@
+# Archivos de entorno
+.env
+.env.dev
+.env.prd
+
+# Directorios de datos
+data/
+
+# Archivos de Python
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+*.ipynb_checkpoints/
+
+# Logs
+logs/
+
+# Entornos virtuales
+venv/
+*.venv/
+.env/
+
+# Herramientas específicas
+# Poetry
+poetry.lock
+.pypoetry/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Otros
+.DS_Store
