@@ -52,7 +52,7 @@ setup_airflow() {
 
     mv docker-compose.yaml ./airflow/
     mkdir -p ./airflow/dags ./airflow/logs ./airflow/plugins ./airflow/config
-    echo -e "AIRFLOW_UID=$(id -u)" >> ./airflow/.env
+    echo -e "AIRFLOW_UID=$(id -u)" >> ./.env
     log "Airflow setup completed with version $version."
 }
 
