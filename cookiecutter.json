@@ -3,6 +3,8 @@
     "project_slug": "{{ cookiecutter.project_title.lower().replace(' ', '_').replace('-', '_') }}",
     "project_description": "Pipeline template...",
     "project_author_name": "Tu nombre",
-    "project_packages": ["All","Simple", "Minimal"],
+    "data_analysis_engine": ["Pandas", "Polars"],
+    "project_packages": ["All", "Simple", "Minimal"],
+    "dev_dependencies": ["Yes", "No"],
     "python_version": "3.10"
 }

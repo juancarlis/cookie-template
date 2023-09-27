@@ -5,35 +5,38 @@ description = "{{ cookiecutter.project_description }}"
 authors = ["{{ cookiecutter.project_author_name }}"]
 
 [tool.poetry.dev-dependencies]
+{% if cookiecutter.dev_dependencies == "Yes" -%}
 jupyter = "*"
 jupyterlab = "*"
 flake8 = "*"
 black = "*"
 jupyterlab_vim = "*"
+{% endif -%}
 
 [tool.poetry.dependencies]
 python = "^{{ cookiecutter.python_version }}"
 
-{% if cookiecutter.project_packages == "All" -%}
-fs = "*"
-pathlib = "*"
-pyprojroot = "*"
-pyhere = "*"
+{% if cookiecutter.data_analysis_engine == "Pandas" -%}
 pandas = "*"
+{% endif -%}
+{% if cookiecutter.data_analysis_engine == "Polars" -%}
+polars = "*"
+{% endif -%}
+
+{% if cookiecutter.project_packages == "All" -%}
 python-dotenv = "*"
 pyodbc = "*"
 mysql-connector-python = "*"
 boto3 = "^1.21"
 SQLAlchemy = "*"
 {% endif -%}
-{% if cookiecutter.project_packages == "Simple"-%}
+{% if cookiecutter.project_packages == "Simple" -%}
 SQLAlchemy = "*"
-pandas = "*"
 python-dotenv = "*"
 pyodbc = "*"
 mysql-connector-python = "*"
 {% endif -%}
-{% if cookiecutter.project_packages == "Minimal"-%}
+{% if cookiecutter.project_packages == "Minimal" -%}
 {% endif -%}
 
 [tool.black]
