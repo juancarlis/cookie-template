@@ -1,0 +1,4 @@
+dirs:
+  raw: data/raw/
+  stg: data/stg/
+  processed: data/processed/
