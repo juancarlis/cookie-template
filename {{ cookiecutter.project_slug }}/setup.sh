@@ -34,26 +34,29 @@ EOL
     log ".env files created successfully."
 }
 
-setup_airflow() {
-    local version="stable"
-    if [[ "$1" == "--version" && -n "$2" ]]; then
-        version="$2"
-    fi
+create_data_dirs() {
+    log "Creating data directories..."
+    mkdir -p data/raw data/stg data/processed data/garbage
+    log "Data directories created successfully."
+}
 
-    log "Setting up Airflow..."
-    if [[ ! -d "./airflow" ]]; then
-        mkdir ./airflow
-    fi
+move_to_garbage() {
+    local dir_to_clean=$1
+    log "Moving all files from $dir_to_clean to data/garbage..."
+    mv $dir_to_clean/* data/garbage/ 2>/dev/null
+    log "Moved all files from $dir_to_clean to data/garbage."
+}
 
-    if ! curl -LfO "https://airflow.apache.org/docs/apache-airflow/$version/docker-compose.yaml"; then
-        log "Error: Failed to download Airflow version $version. Please check the available versions at: https://airflow.apache.org/docs/apache-airflow/"
-        exit 1
+clean_data() {
+    if [[ "$1" == "--all" ]]; then
+        move_to_garbage "data/raw"
+        move_to_garbage "data/stg"
+        move_to_garbage "data/processed"
+    elif [[ "$1" == "--dir" && -n "$2" ]]; then
+        move_to_garbage "data/$2"
+    else
+        log "Invalid option for data clean."
     fi
-
-    mv docker-compose.yaml ./airflow/
-    mkdir -p ./airflow/dags ./airflow/logs ./airflow/plugins ./airflow/config
-    echo -e "AIRFLOW_UID=$(id -u)" >> ./.env
-    log "Airflow setup completed with version $version."
 }
 
 show_help() {
@@ -71,13 +74,20 @@ show_help() {
             echo "  --help, -h       Display this help message."
             echo "  --no-airflow     Execute the complete setup flow without setting up Airflow."
             ;;
+        data)
+            echo "Usage: ./setup.sh data [SUBCOMMAND] [OPTION]"
+            echo "  structure --create, -c  Create data directories."
+            echo "  clean --all             Move all files from raw, stg, processed to garbage."
+            echo "  clean --dir [DIR]       Move all files from specified dir to garbage."
+            ;;
         *)
-            echo "Usage: ./setup.sh [OPTION]"
-            echo "Available options:"
+            echo "Usage: ./setup.sh [COMMAND] [OPTION]"
+            echo "Available commands:"
             echo "  --help, -h       Display this help message."
             echo "  all              Execute the complete setup flow."
             echo "  env              Only create the .env files."
             echo "  airflow          Set up Airflow."
+            echo "  data             Data helping commands."
             ;;
     esac
 }
@@ -93,9 +103,6 @@ case "$1" in
             exit 0
         fi
         create_env_files
-        if [[ "$2" != "--no-airflow" ]]; then
-            setup_airflow
-        fi
         log "Executing poetry install..."
         poetry install 2>&1 | tee -a $LOG_FILE
         log "Poetry install completed."
@@ -113,7 +120,25 @@ case "$1" in
             show_help airflow
             exit 0
         fi
-        setup_airflow "$2" "$3"
+        # Aquí deberías tener tu función setup_airflow
+        ;;
+    data)
+        case "$2" in
+            structure)
+                if [[ "$3" == "--create" || "$3" == "-c" ]]; then
+                    create_data_dirs
+                else
+                    log "Invalid option for data structure."
+                fi
+                ;;
+            clean)
+                clean_data "$3" "$4"
+                ;;
+            *)
+                log "Invalid subcommand for data."
+                show_help data
+                ;;
+        esac
         ;;
     *)
         echo "Unrecognized or not provided option."
