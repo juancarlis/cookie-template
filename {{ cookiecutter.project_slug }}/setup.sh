@@ -48,7 +48,7 @@ move_to_garbage() {
 }
 
 clean_data() {
-    if [[ "$1" == "--all" ]]; then
+    if [[ "$1" == "--clean" ]]; then
         move_to_garbage "data/raw"
         move_to_garbage "data/stg"
         move_to_garbage "data/processed"
@@ -74,11 +74,12 @@ show_help() {
             echo "  --help, -h       Display this help message."
             echo "  --no-airflow     Execute the complete setup flow without setting up Airflow."
             ;;
-        data)
-            echo "Usage: ./setup.sh data [SUBCOMMAND] [OPTION]"
+        manage)
+            echo "Usage: ./setup.sh manage [SUBCOMMAND] [OPTION]"
             echo "  structure --create, -c  Create data directories."
-            echo "  clean --all             Move all files from raw, stg, processed to garbage."
-            echo "  clean --dir [DIR]       Move all files from specified dir to garbage."
+            echo "  structure --clean       Move all files from raw, stg, processed to garbage."
+            # echo "  clean --all             Move all files from raw, stg, processed to garbage."
+            # echo "  clean --dir [DIR]       Move all files from specified dir to garbage."
             ;;
         *)
             echo "Usage: ./setup.sh [COMMAND] [OPTION]"
@@ -87,7 +88,7 @@ show_help() {
             echo "  all              Execute the complete setup flow."
             echo "  env              Only create the .env files."
             echo "  airflow          Set up Airflow."
-            echo "  data             Data helping commands."
+            echo "  manage           Data helping commands."
             ;;
     esac
 }
@@ -122,21 +123,20 @@ case "$1" in
         fi
         # Aquí deberías tener tu función setup_airflow
         ;;
-    data)
+    manage)
         case "$2" in
             structure)
                 if [[ "$3" == "--create" || "$3" == "-c" ]]; then
                     create_data_dirs
+                elif [[ "$3" == "--clean" ]]; then
+                    clean_data "$3" "$4"
                 else
-                    log "Invalid option for data structure."
+                    log "Invalid option for manage structure."
                 fi
                 ;;
-            clean)
-                clean_data "$3" "$4"
-                ;;
             *)
-                log "Invalid subcommand for data."
-                show_help data
+                log "Invalid subcommand for manage."
+                show_help manage
                 ;;
         esac
         ;;
