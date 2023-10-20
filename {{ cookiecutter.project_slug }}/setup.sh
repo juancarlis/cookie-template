@@ -40,6 +40,12 @@ create_data_dirs() {
     log "Data directories created successfully."
 }
 
+create_notebooks_dirs() {
+    log "Creating notebooks directory..."
+    mkdir notebooks 
+    log "Notebook directory created successfully."
+}
+
 move_to_garbage() {
     local dir_to_clean=$1
     log "Moving all files from $dir_to_clean to data/garbage..."
@@ -76,8 +82,9 @@ show_help() {
             ;;
         manage)
             echo "Usage: ./setup.sh manage [SUBCOMMAND] [OPTION]"
-            echo "  structure --create, -c  Create data directories."
-            echo "  structure --clean       Move all files from raw, stg, processed to garbage."
+            echo "  data --create-dirs, -c  Create data directories."
+            echo "  data --clean            Move all files from raw, stg, processed to garbage."
+            echo "  notebooks --create-dirs, -c  Create notebooks dir."
             # echo "  clean --all             Move all files from raw, stg, processed to garbage."
             # echo "  clean --dir [DIR]       Move all files from specified dir to garbage."
             ;;
@@ -125,13 +132,18 @@ case "$1" in
         ;;
     manage)
         case "$2" in
-            structure)
-                if [[ "$3" == "--create" || "$3" == "-c" ]]; then
+            data)
+                if [[ "$3" == "--create-dirs" || "$3" == "-c" ]]; then
                     create_data_dirs
                 elif [[ "$3" == "--clean" ]]; then
                     clean_data "$3" "$4"
                 else
                     log "Invalid option for manage structure."
+                fi
+                ;;
+            notebooks)
+                if [[ "$3" == "--create-dirs" || "$3" == "-c" ]]; then
+                  create_notebooks_dirs
                 fi
                 ;;
             *)
