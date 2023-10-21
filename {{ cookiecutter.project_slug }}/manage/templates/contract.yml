@@ -1,0 +1,14 @@
+version: 0.1
+title: # filename tile
+extraction_type:
+db_type:
+database:
+output: 
+  type: # parquet, csv
+  path: # file name comes from the title 
+query: 
+  #SELECT CodComitente, NumComitente, Descripcion FROM COMITENTES
+properties:
+  Name:
+    type:
+    description: ""
